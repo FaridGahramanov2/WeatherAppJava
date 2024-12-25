@@ -1,12 +1,10 @@
-package patterns.adapter;
+package service.api;
 
 import model.WeatherData;
 import org.json.JSONObject;
 import patterns.strategy.WeatherProcessingStrategy;
 
-/**
- * Converts API responses into WeatherData objects.
- */
+
 public class ApiResponseAdapter {
     public WeatherData convertToWeatherData(String jsonString, WeatherProcessingStrategy strategy) {
         JSONObject jsonResponse = new JSONObject(jsonString);
@@ -20,11 +18,10 @@ public class ApiResponseAdapter {
         double humidity = main.getDouble("humidity");
         double pressure = main.getDouble("pressure");
         String description = weather.getString("description");
-        String countryCode = sys.getString("country"); // Extract country code
+        String countryCode = sys.getString("country");
         long sunrise = sys.getLong("sunrise");
         long sunset = sys.getLong("sunset");
 
-        // Update WeatherData using the new method signature
         weatherData.updateData(temperature, humidity, pressure, description, countryCode, sunrise, sunset);
         return weatherData;
     }

@@ -1,10 +1,9 @@
 package patterns.facade;
 
 import model.WeatherData;
-import org.json.JSONObject;
 import patterns.singleton.ApiClient;
 import patterns.strategy.WeatherProcessingStrategy;
-import patterns.adapter.ApiResponseAdapter;
+import service.api.ApiResponseAdapter;
 
 public class WeatherServiceFacade {
     private final ApiClient apiClient;

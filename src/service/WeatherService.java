@@ -2,7 +2,7 @@ package service;
 
 import model.WeatherData;
 import patterns.singleton.ApiClient;
-import patterns.adapter.ApiResponseAdapter;
+import service.api.ApiResponseAdapter;
 import patterns.strategy.WeatherProcessingStrategy;
 
 public class WeatherService {

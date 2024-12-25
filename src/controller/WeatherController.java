@@ -9,9 +9,6 @@ import patterns.strategy.WeatherProcessingStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controls the weather data fetching and observer updates.
- */
 public class WeatherController implements WeatherObserver {
     private final WeatherServiceFacade weatherService;
     private WeatherData weatherData;
@@ -26,23 +23,18 @@ public class WeatherController implements WeatherObserver {
         this.weatherData = new WeatherData();
     }
 
-    /**
-     * Fetches weather data for the given city and updates the WeatherData object.
-     *
-     * @param city The city for which weather data is to be fetched.
-     */
+
     public void fetchWeatherData(String city) {
         try {
             this.lastCity = city;
             WeatherData newData = weatherService.getWeatherData(city);
 
             if (newData != null) {
-                // Transfer all observers to the new WeatherData instance
                 for (WeatherObserver observer : observers) {
                     newData.registerObserver(observer);
                 }
 
-                // Update the current WeatherData instance and notify observers
+
                 this.weatherData.updateData(
                         newData.getTemperature(),
                         newData.getHumidity(),
@@ -60,21 +52,12 @@ public class WeatherController implements WeatherObserver {
         }
     }
 
-    /**
-     * Adds a new observer to the weather data.
-     *
-     * @param observer The observer to be added.
-     */
+
     public void addObserver(WeatherObserver observer) {
         observers.add(observer);
         weatherData.registerObserver(observer);
     }
 
-    /**
-     * Sets a new processing strategy and fetches updated weather data.
-     *
-     * @param strategy The new processing strategy.
-     */
     public void setProcessingStrategy(WeatherProcessingStrategy strategy) {
         this.processingStrategy = strategy;
         weatherService.setProcessingStrategy(strategy);
@@ -84,11 +67,7 @@ public class WeatherController implements WeatherObserver {
         }
     }
 
-    /**
-     * Returns the current WeatherData object.
-     *
-     * @return The current WeatherData object.
-     */
+
     public WeatherData getWeatherData() {
         return weatherData;
     }

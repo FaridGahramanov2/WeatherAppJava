@@ -1,5 +1,4 @@
 package service;
-
 import patterns.singleton.ApiClient;
 
 public class GeocodingService {
@@ -10,7 +9,6 @@ public class GeocodingService {
     }
 
     public String validateCity(String cityName) throws Exception {
-        // Basic validation for now - can be expanded to use geocoding API
         if (cityName == null || cityName.trim().isEmpty()) {
             throw new IllegalArgumentException("City name cannot be empty");
         }
