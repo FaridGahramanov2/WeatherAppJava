@@ -1,7 +1,6 @@
 package patterns.observer;
 
 
-import patterns.observer.WeatherObserver;
 
 public interface WeatherSubject {
     void registerObserver(WeatherObserver observer);

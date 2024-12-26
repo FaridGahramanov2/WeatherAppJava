@@ -1,4 +1,4 @@
-package patterns.singleton;
+package service;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;

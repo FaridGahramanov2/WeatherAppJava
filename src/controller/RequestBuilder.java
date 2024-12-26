@@ -1,6 +1,6 @@
-package patterns.builder;
+package controller;
 
-import service.api.ApiConfig;
+import service.ApiConfig;
 
 public class RequestBuilder {
     private String endpoint; // API endpoint (e.g., weather, forecast)

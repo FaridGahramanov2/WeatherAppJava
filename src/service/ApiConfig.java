@@ -1,4 +1,4 @@
-package service.api;
+package service;
 
 public class ApiConfig {
     private static final String API_KEY = "02571d32cb396b192ca04d40330c0e93";

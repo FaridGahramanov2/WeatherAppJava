@@ -1,6 +1,6 @@
-package patterns.proxy;
+package model;
 
-import patterns.singleton.ApiClient;
+import service.ApiClient;
 
 import java.util.HashMap;
 import java.util.Map;

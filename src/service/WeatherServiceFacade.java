@@ -1,10 +1,10 @@
-package patterns.facade;
+package service;
 
 import model.WeatherData;
-import patterns.builder.RequestBuilder;
-import patterns.proxy.WeatherApiProxy;
+import controller.RequestBuilder;
+import model.WeatherApiProxy;
 import patterns.strategy.WeatherProcessingStrategy;
-import patterns.adapter.ApiResponseAdapter;
+import model.ApiResponseAdapter;
 
 public class WeatherServiceFacade {
     private final WeatherApiProxy proxy;
@@ -12,7 +12,7 @@ public class WeatherServiceFacade {
     private WeatherProcessingStrategy processingStrategy;
 
     public WeatherServiceFacade(WeatherProcessingStrategy strategy) {
-        this.proxy = new WeatherApiProxy(); // Use the proxy
+        this.proxy = new WeatherApiProxy();
         this.adapter = new ApiResponseAdapter();
         this.processingStrategy = strategy;
     }
@@ -21,17 +21,16 @@ public class WeatherServiceFacade {
         try {
             System.out.println("Fetching weather data for: " + city);
 
-            // Use RequestBuilder to construct the API URL
+            // Always use standard (Kelvin) units from API
             String url = new RequestBuilder()
                     .setEndpoint("weather")
                     .setCity(city)
-                    .setUnits(processingStrategy.getTemperatureUnit().equals("°F") ? "imperial" : "metric")
+                    .setUnits("standard")  // Always fetch in Kelvin
                     .setLanguage("en")
                     .build();
 
             System.out.println("Request URL: " + url);
 
-            // Fetch data via the proxy
             String response = proxy.getWeatherData(city, url);
             System.out.println("Received response: " + response);
 
