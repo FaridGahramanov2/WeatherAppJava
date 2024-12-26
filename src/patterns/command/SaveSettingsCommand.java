@@ -1,7 +1,6 @@
-package controller;
+package patterns.command;
 
 import controller.WeatherController;
-import patterns.command.Command;
 import patterns.strategy.WeatherProcessingStrategy;
 
 public class SaveSettingsCommand implements Command {
@@ -16,5 +15,6 @@ public class SaveSettingsCommand implements Command {
     @Override
     public void execute() {
         controller.setProcessingStrategy(strategy);
+        System.out.println("Processing strategy updated to: " + strategy.getClass().getSimpleName());
     }
 }

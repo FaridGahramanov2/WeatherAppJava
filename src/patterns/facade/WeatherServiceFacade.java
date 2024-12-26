@@ -1,17 +1,18 @@
 package patterns.facade;
 
 import model.WeatherData;
-import patterns.singleton.ApiClient;
+import patterns.builder.RequestBuilder;
+import patterns.proxy.WeatherApiProxy;
 import patterns.strategy.WeatherProcessingStrategy;
-import service.api.ApiResponseAdapter;
+import patterns.adapter.ApiResponseAdapter;
 
 public class WeatherServiceFacade {
-    private final ApiClient apiClient;
+    private final WeatherApiProxy proxy;
     private final ApiResponseAdapter adapter;
     private WeatherProcessingStrategy processingStrategy;
 
     public WeatherServiceFacade(WeatherProcessingStrategy strategy) {
-        this.apiClient = ApiClient.getInstance();
+        this.proxy = new WeatherApiProxy(); // Use the proxy
         this.adapter = new ApiResponseAdapter();
         this.processingStrategy = strategy;
     }
@@ -19,7 +20,19 @@ public class WeatherServiceFacade {
     public WeatherData getWeatherData(String city) {
         try {
             System.out.println("Fetching weather data for: " + city);
-            String response = apiClient.fetchWeatherData(city);
+
+            // Use RequestBuilder to construct the API URL
+            String url = new RequestBuilder()
+                    .setEndpoint("weather")
+                    .setCity(city)
+                    .setUnits(processingStrategy.getTemperatureUnit().equals("°F") ? "imperial" : "metric")
+                    .setLanguage("en")
+                    .build();
+
+            System.out.println("Request URL: " + url);
+
+            // Fetch data via the proxy
+            String response = proxy.getWeatherData(city, url);
             System.out.println("Received response: " + response);
 
             if (response != null && !response.isEmpty()) {

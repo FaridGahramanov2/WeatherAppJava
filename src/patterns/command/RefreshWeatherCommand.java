@@ -1,7 +1,6 @@
-package controller;
+package patterns.command;
 
 import controller.WeatherController;
-import patterns.command.Command;
 
 public class RefreshWeatherCommand implements Command {
     private final WeatherController controller;

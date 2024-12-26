@@ -3,9 +3,13 @@ package view;
 import controller.WeatherController;
 import model.WeatherConditions;
 import model.WeatherData;
+import patterns.command.RefreshWeatherCommand;
+import patterns.command.SaveSettingsCommand;
+import patterns.strategy.ImperialProcessor;
+import patterns.strategy.MetricProcessor;
+import patterns.strategy.WeatherProcessingStrategy;
 import view.components.GradientPanel;
 import view.utility.ColorClimate;
-import view.utility.WeatherStateResolver;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +21,11 @@ public class MainFrame extends JFrame {
     private final WeatherController controller;
     private JTextField cityInput;
     private JButton searchButton;
+    private JButton refreshButton;
+    private JButton saveButton;
     private GradientPanel backgroundPanel;
+
+    private JComboBox<String> unitSelector; // Dropdown for unit selection (metric/imperial)
 
     // Custom colors
     private static final Color PRIMARY_COLOR = new Color(0x2196F3);
@@ -43,18 +51,13 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Create main gradient background
         backgroundPanel = new GradientPanel(PRIMARY_COLOR, ACCENT_COLOR);
         setContentPane(backgroundPanel);
         backgroundPanel.setLayout(new BorderLayout(20, 20));
     }
 
     private void setupComponents() {
-        // Create and style the search panel
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        searchPanel.setOpaque(false);
-
-        // Style the city input
+        // Search input field
         cityInput = new JTextField(20);
         cityInput.setPreferredSize(new Dimension(250, 35));
         cityInput.setBackground(INPUT_BG_COLOR);
@@ -66,20 +69,26 @@ public class MainFrame extends JFrame {
         ));
         cityInput.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        // Style the search button
+        // Buttons
         searchButton = createStyledButton("Search");
+        refreshButton = createStyledButton("Refresh");
+        saveButton = createStyledButton("Save Settings");
 
-        searchPanel.add(cityInput);
-        searchPanel.add(searchButton);
+        // Unit selector
+        unitSelector = new JComboBox<>(new String[]{"Metric", "Imperial"});
+        unitSelector.setPreferredSize(new Dimension(120, 35));
+        unitSelector.setBackground(INPUT_BG_COLOR);
+        unitSelector.setForeground(TEXT_COLOR);
+        unitSelector.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
-        // Style the weather panel
+        // Weather panel
         weatherPanel.setOpaque(false);
         weatherPanel.setBorder(new EmptyBorder(20, 40, 40, 40));
     }
 
     private JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(100, 35));
+        button.setPreferredSize(new Dimension(120, 35));
         button.setBackground(new Color(255, 255, 255, 30));
         button.setForeground(TEXT_COLOR);
         button.setFocusPainted(false);
@@ -91,6 +100,7 @@ public class MainFrame extends JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 255, 255, 50));
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(new Color(255, 255, 255, 30));
             }
@@ -100,47 +110,46 @@ public class MainFrame extends JFrame {
     }
 
     private void setupLayout() {
-        // Create main content panel with BorderLayout
         JPanel mainContent = new JPanel(new BorderLayout(0, 20));
         mainContent.setOpaque(false);
 
-        // Create and setup top panel
+        // Top panel with search input and buttons
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
         topPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
-        // Add app title
         JLabel titleLabel = new JLabel("Weather Forecast", JLabel.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titleLabel.setForeground(TEXT_COLOR);
         topPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // Add search panel
-        JPanel searchWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        searchWrapper.setOpaque(false);
-        searchWrapper.add(cityInput);
-        searchWrapper.add(searchButton);
-        topPanel.add(searchWrapper, BorderLayout.CENTER);
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        searchPanel.setOpaque(false);
+        searchPanel.add(cityInput);
+        searchPanel.add(unitSelector);
+        searchPanel.add(searchButton);
+        searchPanel.add(refreshButton);
+        searchPanel.add(saveButton); // Add Save button
 
-        // Add panels to main content
+        topPanel.add(searchPanel, BorderLayout.CENTER);
+
         mainContent.add(topPanel, BorderLayout.NORTH);
         mainContent.add(weatherPanel, BorderLayout.CENTER);
 
-        // Add main content to background panel
         backgroundPanel.add(mainContent);
-
-        // Set preferred size for weatherPanel
-        weatherPanel.setPreferredSize(new Dimension(600, 400));
     }
 
     private void setupEventListeners() {
         searchButton.addActionListener(e -> performSearch());
+        refreshButton.addActionListener(e -> performRefresh());
+        saveButton.addActionListener(e -> performSave()); // Save button listener
         cityInput.addActionListener(e -> performSearch());
     }
 
     private void performSearch() {
         String city = cityInput.getText().trim();
         if (!city.isEmpty()) {
+            System.out.println("Searching for city: " + city);
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             controller.fetchWeatherData(city);
 
@@ -151,7 +160,37 @@ public class MainFrame extends JFrame {
                 showError("City not found! Please check the spelling and try again.");
             }
             setCursor(Cursor.getDefaultCursor());
+        } else {
+            showError("Please enter a city name.");
         }
+    }
+
+    private void performRefresh() {
+        if (controller.getWeatherData() != null) {
+            String city = cityInput.getText().trim();
+            if (!city.isEmpty()) {
+                // Use RefreshWeatherCommand
+                RefreshWeatherCommand refreshCommand = new RefreshWeatherCommand(controller, city);
+                controller.executeCommand(refreshCommand);
+            } else {
+                showError("Please enter a city name.");
+            }
+        } else {
+            showError("No data to refresh. Please search for a city first.");
+        }
+    }
+
+    private void performSave() {
+        String selectedUnit = (String) unitSelector.getSelectedItem();
+        WeatherProcessingStrategy strategy = "Imperial".equals(selectedUnit)
+                ? new ImperialProcessor() // Use ImperialProcessor
+                : new MetricProcessor();  // Default to MetricProcessor
+
+        // Use SaveSettingsCommand
+        SaveSettingsCommand saveCommand = new SaveSettingsCommand(controller, strategy);
+        controller.executeCommand(saveCommand);
+
+        JOptionPane.showMessageDialog(this, "Settings saved successfully!");
     }
 
     private void showError(String message) {
@@ -164,8 +203,8 @@ public class MainFrame extends JFrame {
     }
 
     private void updateBackground(WeatherData weatherData) {
-        // Get current time and compare with sunrise/sunset
         long currentTime = Instant.now().getEpochSecond();
+        System.out.println("Updating background with weather data: " + weatherData);
 
         ColorClimate colorClimate = new ColorClimate(
                 WeatherConditions.fromString(weatherData.getDescription()),
@@ -175,12 +214,11 @@ public class MainFrame extends JFrame {
                 weatherData.getSunset()
         );
         Color[] colors = colorClimate.getColorPalette();
+        System.out.println("Background colors: " + colors[0] + ", " + colors[1]);
 
-        // Create new background panel
         GradientPanel newBackgroundPanel = new GradientPanel(colors[0], colors[1]);
         newBackgroundPanel.setLayout(new BorderLayout(20, 20));
 
-        // Save the main content panel
         Component mainContent = null;
         for (Component component : backgroundPanel.getComponents()) {
             if (component instanceof JPanel) {
@@ -189,12 +227,10 @@ public class MainFrame extends JFrame {
             }
         }
 
-        // Add the main content back to the new panel
         if (mainContent != null) {
             newBackgroundPanel.add(mainContent, BorderLayout.CENTER);
         }
 
-        // Update the background panel reference
         backgroundPanel = newBackgroundPanel;
         setContentPane(backgroundPanel);
 

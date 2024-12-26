@@ -18,7 +18,6 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
     private JLabel locationLabel;
     private JLabel flagLabel;
 
-    // Custom colors for text
     private static final Color PRIMARY_TEXT = new Color(255, 255, 255);
     private static final Color SECONDARY_TEXT = new Color(255, 255, 255, 200);
 
@@ -92,18 +91,18 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         System.out.println("WeatherPanel: Received update");
         SwingUtilities.invokeLater(() -> {
             try {
-                // Update weather icon with larger size
+
                 String iconPath = WeatherStateResolver.getWeatherImagePath(description);
                 ImageLabelGenerator weatherIconGenerator = new ImageLabelGenerator(iconPath, new Rectangle(0, 0, 150, 150));
                 weatherIconLabel.setIcon(weatherIconGenerator.createImageLabel().getIcon());
 
-                // Update flag with appropriate size
+
                 String flagPath = CountryImageResolver.getCountryImagePath(countryCode);
                 ImageIcon flagIcon = new ImageIcon(flagPath);
                 Image scaledFlag = flagIcon.getImage().getScaledInstance(32, 24, Image.SCALE_SMOOTH);
                 flagLabel.setIcon(new ImageIcon(scaledFlag));
 
-                // Update text labels with formatted values
+
                 locationLabel.setText(String.format("%s", countryCode.toUpperCase()));
                 temperatureLabel.setText(String.format("%.1f°C", temperature));
                 descriptionLabel.setText(capitalizeFirst(description));

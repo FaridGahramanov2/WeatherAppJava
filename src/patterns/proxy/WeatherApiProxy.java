@@ -1,26 +1,33 @@
-// patterns/proxy/WeatherApiProxy.java
 package patterns.proxy;
 
 import patterns.singleton.ApiClient;
-import patterns.singleton.WeatherDataCache;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WeatherApiProxy {
     private final ApiClient apiClient;
-    private final WeatherDataCache cache;
+    private final Map<String, String> cache; // In-memory cache
 
     public WeatherApiProxy() {
         this.apiClient = ApiClient.getInstance();
-        this.cache = WeatherDataCache.getInstance();
+        this.cache = new HashMap<>();
     }
 
-    public String getWeatherData(String city) throws Exception {
-        String cachedData = cache.get(city);
-        if (cachedData != null) {
-            return cachedData;
+    public String getWeatherData(String city, String url) throws Exception {
+        // Check cache
+        if (cache.containsKey(city)) {
+            System.out.println("Cache hit for city: " + city);
+            return cache.get(city);
         }
 
-        String freshData = apiClient.fetchWeatherData(city);
-        cache.put(city, freshData);
-        return freshData;
+        // Fetch data from API
+        String response = apiClient.fetchWeatherData(url);
+        System.out.println("Cache miss. Fetched data for city: " + city);
+
+        // Store in cache
+        cache.put(city, response);
+
+        return response;
     }
 }

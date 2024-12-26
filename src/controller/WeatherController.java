@@ -1,13 +1,15 @@
 package controller;
 
 import model.WeatherData;
-import patterns.facade.WeatherServiceFacade;
 import patterns.observer.WeatherObserver;
-import patterns.strategy.MetricProcessor;
 import patterns.strategy.WeatherProcessingStrategy;
+import patterns.strategy.MetricProcessor;
+import patterns.facade.WeatherServiceFacade;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import patterns.command.Command;
 
 public class WeatherController implements WeatherObserver {
     private final WeatherServiceFacade weatherService;
@@ -23,6 +25,9 @@ public class WeatherController implements WeatherObserver {
         this.weatherData = new WeatherData();
     }
 
+    public void executeCommand(Command command) {
+        command.execute(); // Execute the provided command
+    }
 
     public void fetchWeatherData(String city) {
         try {
@@ -33,7 +38,6 @@ public class WeatherController implements WeatherObserver {
                 for (WeatherObserver observer : observers) {
                     newData.registerObserver(observer);
                 }
-
 
                 this.weatherData.updateData(
                         newData.getTemperature(),
@@ -52,21 +56,20 @@ public class WeatherController implements WeatherObserver {
         }
     }
 
-
-    public void addObserver(WeatherObserver observer) {
-        observers.add(observer);
-        weatherData.registerObserver(observer);
-    }
-
     public void setProcessingStrategy(WeatherProcessingStrategy strategy) {
         this.processingStrategy = strategy;
         weatherService.setProcessingStrategy(strategy);
 
+        // Re-fetch weather data using the updated strategy if a city is already selected
         if (lastCity != null) {
             fetchWeatherData(lastCity);
         }
     }
 
+    public void addObserver(WeatherObserver observer) {
+        observers.add(observer);
+        weatherData.registerObserver(observer);
+    }
 
     public WeatherData getWeatherData() {
         return weatherData;

@@ -1,4 +1,4 @@
-package service.api;
+package patterns.adapter;
 
 import model.WeatherData;
 import org.json.JSONObject;
