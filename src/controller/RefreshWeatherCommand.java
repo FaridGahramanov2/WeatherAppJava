@@ -1,8 +1,8 @@
 package controller;
 
-import controller.WeatherController;
 import patterns.command.Command;
 
+//Command
 public class RefreshWeatherCommand implements Command {
     private final WeatherController controller;
     private final String city;

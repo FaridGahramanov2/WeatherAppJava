@@ -23,7 +23,7 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
     private JPanel detailsPanel;
     private WeatherProcessingStrategy currentStrategy;
 
-    // Enhanced styling
+
     private static final Color PRIMARY_TEXT = new Color(255, 255, 255);
     private static final Color SECONDARY_TEXT = new Color(255, 255, 255, 200);
     private static final Font TEMP_FONT = new Font("Segoe UI", Font.BOLD, 72);
@@ -47,11 +47,11 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Initialize main weather icon with larger size
+
         weatherIconLabel = new JLabel("", JLabel.CENTER);
         weatherIconLabel.setPreferredSize(new Dimension(200, 200));
 
-        // Enhanced location display with flag
+
         JPanel locationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         locationPanel.setOpaque(false);
 
@@ -60,13 +60,13 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         locationPanel.add(locationLabel);
         locationPanel.add(flagLabel);
 
-        // Enhanced temperature display
+
         temperatureLabel = createStyledLabel("", TEMP_FONT, PRIMARY_TEXT);
 
-        // Enhanced description
+
         descriptionLabel = createStyledLabel("", DESC_FONT, PRIMARY_TEXT);
 
-        // Enhanced details panel
+
         detailsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 10));
         detailsPanel.setOpaque(false);
         detailsPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -74,7 +74,7 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
                 new EmptyBorder(20, 30, 20, 30)
         ));
 
-        // Create styled detail containers
+
         JPanel humidityContainer = createDetailContainer("💧", "Humidity");
         JPanel pressureContainer = createDetailContainer("🌡️", "Pressure");
 
@@ -85,10 +85,10 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         pressureContainer.add(pressureLabel);
 
         detailsPanel.add(humidityContainer);
-        detailsPanel.add(Box.createHorizontalStrut(30)); // Spacing between details
+        detailsPanel.add(Box.createHorizontalStrut(30));
         detailsPanel.add(pressureContainer);
 
-        // Layout components with proper spacing
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(20, 10, 30, 10);
@@ -125,7 +125,7 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         container.setOpaque(false);
 
-        // Create icon and label
+
         JLabel iconLabel = new JLabel(icon);
         iconLabel.setFont(new Font("Segoe UI", Font.PLAIN, 24));
         iconLabel.setForeground(SECONDARY_TEXT);
@@ -136,7 +136,7 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
         textLabel.setForeground(SECONDARY_TEXT);
         textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add components with spacing
+
         container.add(iconLabel);
         container.add(Box.createVerticalStrut(5));
         container.add(textLabel);
@@ -149,18 +149,18 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
     public void update(double temperature, double humidity, double pressure, String description, String countryCode) {
         SwingUtilities.invokeLater(() -> {
             try {
-                // Update weather icon with animation effect
+
                 String iconPath = WeatherStateResolver.getWeatherImagePath(description);
                 ImageLabelGenerator weatherIconGenerator = new ImageLabelGenerator(iconPath, new Rectangle(0, 0, 200, 200));
                 weatherIconLabel.setIcon(weatherIconGenerator.createImageLabel().getIcon());
 
-                // Update flag with smooth scaling
+
                 String flagPath = CountryImageResolver.getCountryImagePath(countryCode);
                 ImageIcon flagIcon = new ImageIcon(flagPath);
                 Image scaledFlag = flagIcon.getImage().getScaledInstance(40, 30, Image.SCALE_SMOOTH);
                 flagLabel.setIcon(new ImageIcon(scaledFlag));
 
-                // Update text components with fade effect
+
                 locationLabel.setText(countryCode.toUpperCase());
                 String unit = currentStrategy != null ? currentStrategy.getTemperatureUnit() : "°C";
                 temperatureLabel.setText(String.format("%.1f%s", temperature, unit));
@@ -168,7 +168,7 @@ public class WeatherPanel extends JPanel implements WeatherObserver {
                 humidityLabel.setText(String.format("%.1f%%", humidity));
                 pressureLabel.setText(String.format("%.1f hPa", pressure));
 
-                // Trigger revalidation and repaint
+
                 revalidate();
                 repaint();
             } catch (Exception e) {

@@ -2,10 +2,10 @@ package controller;
 
 import patterns.strategy.WeatherProcessingStrategy;
 
+//Strateg
 public class MetricProcessor implements WeatherProcessingStrategy {
     @Override
     public double convertTemperature(double kelvin) {
-        // Convert Kelvin to Celsius
         return kelvin - 273.15;
     }
 

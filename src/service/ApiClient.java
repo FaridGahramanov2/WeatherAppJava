@@ -6,6 +6,8 @@ import java.net.http.HttpResponse;
 import java.net.URI;
 import java.io.IOException;
 
+//Singelton
+
 public class ApiClient {
     private static ApiClient instance;
     private final HttpClient httpClient;

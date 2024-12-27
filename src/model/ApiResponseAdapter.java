@@ -1,9 +1,8 @@
 package model;
 
-import model.WeatherData;
 import org.json.JSONObject;
 import patterns.strategy.WeatherProcessingStrategy;
-
+//Adapter
 public class ApiResponseAdapter {
     public WeatherData convertToWeatherData(String jsonString, WeatherProcessingStrategy strategy) {
         try {
@@ -14,7 +13,7 @@ public class ApiResponseAdapter {
             JSONObject weather = jsonResponse.getJSONArray("weather").getJSONObject(0);
             JSONObject sys = jsonResponse.getJSONObject("sys");
 
-            // Temperature comes in Kelvin from API, convert using strategy
+
             double tempKelvin = main.getDouble("temp");
             double temperature = strategy.convertTemperature(tempKelvin);
 

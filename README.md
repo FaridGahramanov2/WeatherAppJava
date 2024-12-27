@@ -51,7 +51,7 @@ The project adheres to the **Model-View-Controller (MVC)** architectural pattern
 ### 1. Creational Patterns
 #### Singleton
 - `ApiClient`: Manages API requests
-- `WeatherDataCache`: Caches weather data
+
 
 #### Builder
 - `RequestBuilder`: Constructs API request URLs

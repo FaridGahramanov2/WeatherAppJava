@@ -5,9 +5,10 @@ import service.ApiClient;
 import java.util.HashMap;
 import java.util.Map;
 
+//Proxy
 public class WeatherApiProxy {
     private final ApiClient apiClient;
-    private final Map<String, String> cache; // In-memory cache
+    private final Map<String, String> cache;
 
     public WeatherApiProxy() {
         this.apiClient = ApiClient.getInstance();
@@ -15,17 +16,17 @@ public class WeatherApiProxy {
     }
 
     public String getWeatherData(String city, String url) throws Exception {
-        // Check cache
+
         if (cache.containsKey(city)) {
             System.out.println("Cache hit for city: " + city);
             return cache.get(city);
         }
 
-        // Fetch data from API
+
         String response = apiClient.fetchWeatherData(url);
         System.out.println("Cache miss. Fetched data for city: " + city);
 
-        // Store in cache
+
         cache.put(city, response);
 
         return response;

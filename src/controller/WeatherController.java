@@ -60,14 +60,14 @@ public class WeatherController implements WeatherObserver {
         this.processingStrategy = strategy;
         weatherService.setProcessingStrategy(strategy);
 
-        // Update the panel's strategy if it's one of your observers
+
         for (WeatherObserver observer : observers) {
             if (observer instanceof WeatherPanel) {
                 ((WeatherPanel) observer).setStrategy(strategy);
             }
         }
 
-        // Re-fetch weather data using the updated strategy if a city is already selected
+
         if (lastCity != null) {
             fetchWeatherData(lastCity);
         }

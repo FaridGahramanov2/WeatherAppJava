@@ -6,6 +6,7 @@ import model.WeatherApiProxy;
 import patterns.strategy.WeatherProcessingStrategy;
 import model.ApiResponseAdapter;
 
+//Facade
 public class WeatherServiceFacade {
     private final WeatherApiProxy proxy;
     private final ApiResponseAdapter adapter;
@@ -21,11 +22,11 @@ public class WeatherServiceFacade {
         try {
             System.out.println("Fetching weather data for: " + city);
 
-            // Always use standard (Kelvin) units from API
+
             String url = new RequestBuilder()
                     .setEndpoint("weather")
                     .setCity(city)
-                    .setUnits("standard")  // Always fetch in Kelvin
+                    .setUnits("standard")
                     .setLanguage("en")
                     .build();
 

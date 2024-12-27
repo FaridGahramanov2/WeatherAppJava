@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
     private JComboBox<String> unitSelector;
     private JPanel searchPanel;
 
-    // Colors
+
     private static final Color PRIMARY_COLOR = new Color(0x2196F3);
     private static final Color ACCENT_COLOR = new Color(0x64B5F6);
     private static final Color TEXT_COLOR = new Color(0xFFFFFF);
@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
 
     private static final Color INPUT_BG_COLOR = new Color(255, 255, 255, 20);
 
-    // Style constants
+
     private static final int BUTTON_HEIGHT = 40;
     private static final int INPUT_HEIGHT = 40;
     private static final int PANEL_SPACING = 25;
@@ -68,17 +68,17 @@ public class MainFrame extends JFrame {
     }
 
     private void setupComponents() {
-        // Search input field
+
         cityInput = new JTextField(25);
         cityInput.setPreferredSize(new Dimension(300, INPUT_HEIGHT));
         setupInputField(cityInput);
 
-        // Unit selector
+
         unitSelector = new JComboBox<>(new String[]{"Metric", "Imperial"});
         unitSelector.setPreferredSize(new Dimension(140, INPUT_HEIGHT));
         setupComboBox(unitSelector);
 
-        // Create buttons with icons
+
         ImageIcon searchIcon = new ImageIcon("assets/images/utils/search.png");
         ImageIcon refreshIcon = new ImageIcon("assets/images/utils/refresh.png");
         ImageIcon saveIcon = new ImageIcon("assets/images/utils/save.png");
@@ -87,7 +87,7 @@ public class MainFrame extends JFrame {
         refreshButton = createStyledButton("Refresh", refreshIcon);
         saveButton = createStyledButton("Save Settings", saveIcon);
 
-        // Weather panel
+
         weatherPanel.setOpaque(false);
         weatherPanel.setBorder(new EmptyBorder(PANEL_SPACING, PANEL_SPACING * 2, PANEL_SPACING * 2, PANEL_SPACING * 2));
     }
@@ -133,7 +133,7 @@ public class MainFrame extends JFrame {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         if (icon != null) {
-            // Scale the icon to fit nicely
+
             Image img = icon.getImage();
             Image newImg = img.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             ImageIcon scaledIcon = new ImageIcon(newImg);
@@ -158,13 +158,13 @@ public class MainFrame extends JFrame {
         JPanel mainContent = new JPanel(new BorderLayout(0, PANEL_SPACING));
         mainContent.setOpaque(false);
 
-        // Top panel
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
         topPanel.setBorder(new EmptyBorder(PANEL_SPACING, PANEL_SPACING, 0, PANEL_SPACING));
 
-        // Title
+
         JLabel titleLabel = new JLabel("Weather Forecast", JLabel.CENTER);
         titleLabel.setFont(TITLE_FONT);
         titleLabel.setForeground(TEXT_COLOR);
@@ -172,18 +172,18 @@ public class MainFrame extends JFrame {
         topPanel.add(titleLabel);
         topPanel.add(Box.createVerticalStrut(20));
 
-        // Search panel
+
         searchPanel = new JPanel();
         searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.Y_AXIS));
         searchPanel.setOpaque(false);
 
-        // Search input group
+
         JPanel searchInputGroup = new JPanel(new FlowLayout(FlowLayout.CENTER));
         searchInputGroup.setOpaque(false);
         searchInputGroup.add(cityInput);
         searchInputGroup.add(unitSelector);
 
-        // Button group
+
         JPanel buttonGroup = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonGroup.setOpaque(false);
         buttonGroup.add(searchButton);

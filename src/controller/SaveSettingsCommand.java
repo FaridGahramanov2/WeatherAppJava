@@ -1,9 +1,10 @@
 package controller;
 
-import controller.WeatherController;
+
 import patterns.command.Command;
 import patterns.strategy.WeatherProcessingStrategy;
 
+//Command
 public class SaveSettingsCommand implements Command {
     private final WeatherController controller;
     private final WeatherProcessingStrategy strategy;
